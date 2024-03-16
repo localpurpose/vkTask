@@ -16,31 +16,35 @@ func main() {
 	// TODO Add salt when hashing user password
 	// TODO implement method to get person by NAME
 
+	mux := http.NewServeMux()
+
 	postgres.ConnectDB()
 	// Person
-	http.HandleFunc("/person/create", handlers.CreatePerson)
-	http.HandleFunc("/person/update", handlers.UpdatePerson)
-	http.HandleFunc("/person/delete", handlers.DeletePerson)
-	http.HandleFunc("/person", handlers.GetPerson)
+	mux.HandleFunc("/person/create", handlers.CreatePerson)
+
+	mux.HandleFunc("/person/update", handlers.UpdatePerson)
+	mux.HandleFunc("/person/delete", handlers.DeletePerson)
+	mux.HandleFunc("/person", handlers.GetPerson)
 
 	// Movie
-	http.HandleFunc("/movie/create", handlers.CreateMovie)
-	http.HandleFunc("/movie/update", handlers.UpdateMovie)
-	http.HandleFunc("/movie/delete", handlers.DeleteMovie)
-	http.HandleFunc("/movie", handlers.GetMovie)
+	mux.HandleFunc("/movie/create", handlers.CreateMovie)
+	mux.HandleFunc("/movie/update", handlers.UpdateMovie)
+	mux.HandleFunc("/movie/delete", handlers.DeleteMovie)
+	mux.HandleFunc("/movie", handlers.GetMovie)
 
 	// Actors - Relations between movies and persons
 	// TODO Implementation actors API (See Task Description)
-	http.HandleFunc("/", handleHome)
+	mux.HandleFunc("/", handleHome)
 
 	// Users (Administrator and default user)
 	// Roles deference implements with JWT claim Role: user, admin
-	http.HandleFunc("/user/sign-up", handlers.UserSignUp)
-	http.HandleFunc("/user/sign-in", handlers.UserSignIn)
+	mux.HandleFunc("/user/sign-up", handlers.UserSignUp)
+	mux.HandleFunc("/user/sign-in", handlers.UserSignIn)
 
-	log.Fatal(http.ListenAndServe(":3000", nil))
+	log.Println("Server started!")
+	log.Fatal(http.ListenAndServe(":3000", mux))
 }
 
-func handleHome(w http.ResponseWriter, r *http.Request) {
+func handleHome(w http.ResponseWriter, _ *http.Request) {
 	w.Write([]byte("Hello from main page"))
 }
