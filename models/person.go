@@ -11,3 +11,7 @@ type Person struct {
 	Gender string `json:"gender" gorm:"not null"`
 	Birth  string `json:"birth" gorm:"not null"`
 }
+
+func (Person) TableName() string {
+	return "persons"
+}
