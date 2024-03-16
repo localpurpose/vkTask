@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-func CreatePerson(w http.ResponseWriter, r *http.Request) {
+func CreateMovie(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		if _, err := w.Write([]byte("Method not allowed. Only POST requests.")); err != nil {
@@ -25,32 +25,24 @@ func CreatePerson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var person models.Person
+	var movie models.Movie
 
-	if err = json.Unmarshal(body, &person); err != nil {
+	if err = json.Unmarshal(body, &movie); err != nil {
 		log.Println("error unmarshalling body")
 		return
 	}
 
-	if err = postgres.DB.DB.Create(&person).Error; err != nil {
+	if err = postgres.DB.DB.Create(&movie).Error; err != nil {
 		log.Println("error while inserting to DB", err)
 		return
 	}
-
-	b, err := json.Marshal(person)
-	if err != nil {
-		log.Println("some error while unmarshalling json", err)
-		return
-	}
-
-	w.Write(b)
 
 	w.WriteHeader(http.StatusOK)
 	// TODO Implement json returns
 
 }
 
-func UpdatePerson(w http.ResponseWriter, r *http.Request) {
+func UpdateMovie(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPatch {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		if _, err := w.Write([]byte("Method not allowed. Only PATCH requests.")); err != nil {
@@ -65,22 +57,21 @@ func UpdatePerson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var person models.Person
+	var movie models.Movie
+	movieID := r.URL.Query()["id"]
 
-	if err := json.Unmarshal(body, &person); err != nil {
+	if err = json.Unmarshal(body, &movie); err != nil {
 		log.Println("error unmarshalling body")
 		return
 	}
 
-	if err = postgres.DB.DB.Where("id = ?", person.ID).Updates(&person).Error; err != nil {
+	if err = postgres.DB.DB.Where("id = ?", movieID).Updates(&movie).Error; err != nil {
 		log.Println("error while updating row in DB", err)
 		return
 	}
-
-	//TODO return status code
 }
 
-func DeletePerson(w http.ResponseWriter, r *http.Request) {
+func DeleteMovie(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		if _, err := w.Write([]byte("Method not allowed. Only DELETE requests.")); err != nil {
@@ -89,20 +80,20 @@ func DeletePerson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var person models.Person
-	personID := r.URL.Query()["id"]
+	var movie models.Movie
+	movieID := r.URL.Query()["id"]
 
 	// TODO check if such user does not exists
 
-	s := postgres.DB.DB.Delete(&person, personID)
+	s := postgres.DB.DB.Delete(&movie, movieID)
 	if s.Error != nil {
 		log.Println("error while deleting row from DB", s.Error)
 		return
 	}
-	w.Write([]byte("OK. User deleted"))
+	w.Write([]byte("OK. Movie deleted"))
 }
 
-func GetPerson(w http.ResponseWriter, r *http.Request) {
+func GetMovie(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		if _, err := w.Write([]byte("Method not allowed. Only DELETE requests.")); err != nil {
@@ -111,19 +102,18 @@ func GetPerson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	personID := r.URL.Query()["id"]
+	movieID := r.URL.Query()["id"]
 
-	var person models.Person
-	err := postgres.DB.DB.Where("id = ?", personID).First(&person).Error
+	var movie models.Movie
+	err := postgres.DB.DB.Where("id = ?", movieID).First(&movie).Error
 	if err != nil {
-		log.Println("Some error while getting user from DB", err)
+		log.Println("Some error while getting movie from DB", err)
 		return
 	}
 
-	w.Write([]byte("OK."))
-	b, err := json.Marshal(person)
+	b, err := json.Marshal(movie)
 	if err != nil {
 		log.Println("some error while unmarshalling", err)
 	}
-	w.Write(b)
+	w.Write([]byte(b))
 }
