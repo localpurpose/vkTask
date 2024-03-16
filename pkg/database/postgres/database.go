@@ -32,7 +32,7 @@ func ConnectDB() {
 	db.Logger = logger.Default.LogMode(logger.Info)
 
 	log.Println("Runing migrations")
-	err = db.AutoMigrate(&models.Actor{}, &models.Person{}, &models.Movie{})
+	err = db.AutoMigrate(&models.Actor{}, &models.Person{}, &models.Movie{}, &models.User{})
 	if err != nil {
 		log.Println(err)
 	}
