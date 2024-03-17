@@ -12,6 +12,8 @@ import (
 
 const (
 	authorizationHeader = "Authorization"
+	userId              = "userID"
+	userRole            = "role"
 )
 
 type tokenClaims struct {
@@ -41,9 +43,10 @@ func Protected(next http.HandlerFunc) http.HandlerFunc {
 			log.Println("some error parsing JWT", err)
 			return
 		}
+
 		log.Println(headerParts)
-		w.Header().Set("userID", strconv.Itoa(userID))
-		w.Header().Set("role", role)
+		w.Header().Set(userId, strconv.Itoa(userID))
+		w.Header().Set(userRole, role)
 		next(w, r)
 	}
 
