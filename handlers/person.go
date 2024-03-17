@@ -33,8 +33,8 @@ func CreatePerson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newJsonResponse(w, http.StatusOK, map[string]string{
-		"ID":     strconv.Itoa(int(person.ID)),
+	newJsonResponse(w, http.StatusOK, map[string]interface{}{
+		"ID":     person.ID,
 		"Name":   person.Name,
 		"Gender": person.Gender,
 		"Birth":  person.Birth,
@@ -58,26 +58,28 @@ func UpdatePerson(w http.ResponseWriter, r *http.Request) {
 
 	personID := r.URL.Query()["id"]
 
-	if err := json.Unmarshal(body, &person); err != nil {
+	if err = json.Unmarshal(body, &person); err != nil {
 		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-
 	res := postgres.DB.DB.Where("id = ?", personID).Updates(&person)
 	if res.Error != nil {
 		newErrorResponse(w, http.StatusInternalServerError, res.Error.Error())
 		return
 	}
-	if err = postgres.DB.DB.Where("id = ?", person).First(&person).Error; err != nil {
+
+	var rPerson models.Person
+
+	if err = postgres.DB.DB.Where("id = ?", personID).First(&rPerson).Error; err != nil {
 		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	newJsonResponse(w, http.StatusOK, map[string]string{
-		"ID":     strconv.Itoa(int(person.ID)),
-		"Name":   person.Name,
-		"Gender": person.Gender,
-		"Birth":  person.Birth,
+	newJsonResponse(w, http.StatusOK, map[string]interface{}{
+		"ID":     rPerson.ID,
+		"Name":   rPerson.Name,
+		"Gender": rPerson.Gender,
+		"Birth":  rPerson.Birth,
 	})
 }
 
@@ -96,7 +98,7 @@ func DeletePerson(w http.ResponseWriter, r *http.Request) {
 		newErrorResponse(w, http.StatusInternalServerError, s.Error.Error())
 		return
 	}
-	newJsonResponse(w, http.StatusOK, map[string]string{"message": "User deleted successfully"})
+	newJsonResponse(w, http.StatusOK, map[string]interface{}{"message": "User deleted successfully"})
 }
 
 func GetPerson(w http.ResponseWriter, r *http.Request) {
@@ -115,7 +117,7 @@ func GetPerson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newJsonResponse(w, http.StatusOK, map[string]string{
+	newJsonResponse(w, http.StatusOK, map[string]interface{}{
 		"ID":     strconv.Itoa(int(person.ID)),
 		"Name":   person.Name,
 		"Gender": person.Gender,

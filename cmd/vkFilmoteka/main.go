@@ -10,8 +10,6 @@ import (
 
 func main() {
 
-	// TODO On-change data should return a new model as a JSON object;
-	// TODO Correct error handling and logging. --> Returning to user, server not stopped!;
 	// TODO implement method to get person by NAME;
 	// TODO Person takes part movie inside his struct and DB model *gorm;
 	// TODO Validate movie rating (1 - 10);

@@ -9,17 +9,17 @@ import (
 func newErrorResponse(w http.ResponseWriter, statusCode int, message string) {
 	log.Println("[Error]", message)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
 	_, err := w.Write([]byte("{\n\t\"message\":\"" + message + "\"\n}"))
 	if err != nil {
 		log.Println("error while writing body", err)
 		return
 	}
-	w.WriteHeader(statusCode)
 }
 
-func newJsonResponse(w http.ResponseWriter, statusCode int, jsn map[string]string) {
-	w.WriteHeader(statusCode)
+func newJsonResponse(w http.ResponseWriter, statusCode int, jsn map[string]interface{}) {
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
 	jsonResp, err := json.Marshal(jsn)
 	if err != nil {
 		log.Println("error while marshalling json")
