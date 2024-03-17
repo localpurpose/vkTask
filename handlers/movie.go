@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func CreateMovie(w http.ResponseWriter, r *http.Request) {
@@ -116,4 +117,33 @@ func GetMovie(w http.ResponseWriter, r *http.Request) {
 		log.Println("some error while unmarshalling", err)
 	}
 	w.Write([]byte(b))
+}
+
+func GetMovieByName(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		if _, err := w.Write([]byte("Method not allowed. Only DELETE requests.")); err != nil {
+			log.Printf("error while writting response body %s", err)
+		}
+		return
+	}
+
+	movieReq := r.URL.Query()["name"]
+	ssd := r.URL.Query()["ssd"]
+	log.Println("ssd--->", ssd)
+
+	var movie []models.Movie
+
+	err := postgres.DB.DB.Select("name").Find(&movie).Error
+	if err != nil {
+		log.Println("some error while selecting from db", err)
+		return
+	}
+
+	for i := 0; i < len(movie); i++ {
+		if strings.Contains(movie[i].Name, movieReq[0]) {
+			log.Println("MATCH:", movie[i].Name)
+		}
+	}
+
 }
