@@ -17,6 +17,7 @@
 DB_USER=userName
 DB_PASSWORD=strongPassword
 DB_NAME=databaseName
+JWT_SECRET="jwtSecretKey"
 ```
 3. Запустите с помощью docker <br>
 ``` docker compose up```
