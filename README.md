@@ -13,10 +13,11 @@
 1. Склонируйте репозиторий на вашу локальную машину <br>
 ``` git clone https://github.com/localpurpose/vkTask.git ```
 2. Создайте файл .env и укажите параметры: <br>
-```
+```python
 DB_USER=userName
 DB_PASSWORD=strongPassword
 DB_NAME=databaseName
+JWT_SECRET="jwtSecretKey"
 ```
 3. Запустите с помощью docker <br>
 ``` docker compose up```
