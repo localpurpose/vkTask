@@ -18,8 +18,3 @@ func LogHandler(fn http.HandlerFunc) http.HandlerFunc {
 		fn(w, r)
 	}
 }
-
-//return func(w http.ResponseWriter, r *http.Request) {
-//	log.Println(r.URL.Path)
-//	f(w, r)
-//}

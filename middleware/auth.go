@@ -24,7 +24,6 @@ type tokenClaims struct {
 
 func Protected(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Println("middleware here")
 		header := r.Header[authorizationHeader]
 
 		if header[0] == "" {
@@ -44,7 +43,6 @@ func Protected(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		log.Println(headerParts)
 		w.Header().Set(userId, strconv.Itoa(userID))
 		w.Header().Set(userRole, role)
 		next(w, r)

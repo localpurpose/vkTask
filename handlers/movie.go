@@ -39,7 +39,6 @@ func CreateMovie(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	// TODO Implement json returns
 
 }
 
@@ -84,7 +83,7 @@ func DeleteMovie(w http.ResponseWriter, r *http.Request) {
 	var movie models.Movie
 	movieID := r.URL.Query()["id"]
 
-	// TODO check if such user does not exists
+	// TODO check if movie user does not exists
 
 	s := postgres.DB.DB.Delete(&movie, movieID)
 	if s.Error != nil {
@@ -94,32 +93,37 @@ func DeleteMovie(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("OK. Movie deleted"))
 }
 
-func GetMovie(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		if _, err := w.Write([]byte("Method not allowed. Only DELETE requests.")); err != nil {
-			log.Printf("error while writting response body %s", err)
-		}
-		return
-	}
+// --- 		Unnecessary method because of existing GetMovieByName below		 ---
 
-	movieID := r.URL.Query()["id"]
-
-	var movie models.Movie
-	err := postgres.DB.DB.Where("id = ?", movieID).First(&movie).Error
-	if err != nil {
-		log.Println("Some error while getting movie from DB", err)
-		return
-	}
-
-	b, err := json.Marshal(movie)
-	if err != nil {
-		log.Println("some error while unmarshalling", err)
-	}
-	w.Write([]byte(b))
-}
+//func GetMovieByID(w http.ResponseWriter, r *http.Request) {
+//	if r.Method != http.MethodGet {
+//		w.WriteHeader(http.StatusMethodNotAllowed)
+//		if _, err := w.Write([]byte("Method not allowed. Only DELETE requests.")); err != nil {
+//			log.Printf("error while writting response body %s", err)
+//		}
+//		return
+//	}
+//
+//	movieID := r.URL.Query()["id"]
+//
+//	var movie models.Movie
+//	err := postgres.DB.DB.Where("id = ?", movieID).First(&movie).Error
+//	if err != nil {
+//		log.Println("Some error while getting movie from DB", err)
+//		return
+//	}
+//
+//	b, err := json.Marshal(movie)
+//	if err != nil {
+//		log.Println("some error while unmarshalling", err)
+//	}
+//	w.Write([]byte(b))
+//}
 
 func GetMovieByName(w http.ResponseWriter, r *http.Request) {
+
+	// TODO Implement sorting by: (ORDER BY): name,rating,date (default:rating)
+
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		if _, err := w.Write([]byte("Method not allowed. Only DELETE requests.")); err != nil {

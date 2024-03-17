@@ -5,125 +5,121 @@ import (
 	"github.com/localpurpose/vk-filmoteka/models"
 	"github.com/localpurpose/vk-filmoteka/pkg/database/postgres"
 	"io"
-	"log"
 	"net/http"
+	"strconv"
 )
 
 func CreatePerson(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		if _, err := w.Write([]byte("Method not allowed. Only POST requests.")); err != nil {
-			log.Printf("error while writting response body %s", err)
-		}
+		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not allowed. Only POST requests.")
 		return
 	}
 
-	// Create Person logic implementation
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println("error reading body", err)
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	var person models.Person
 
 	if err = json.Unmarshal(body, &person); err != nil {
-		log.Println("error unmarshalling body")
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	if err = postgres.DB.DB.Create(&person).Error; err != nil {
-		log.Println("error while inserting to DB", err)
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	b, err := json.Marshal(person)
-	if err != nil {
-		log.Println("some error while unmarshalling json", err)
-		return
-	}
-
-	w.Write(b)
-
-	w.WriteHeader(http.StatusOK)
-	// TODO Implement json returns
+	newJsonResponse(w, http.StatusOK, map[string]string{
+		"ID":     strconv.Itoa(int(person.ID)),
+		"Name":   person.Name,
+		"Gender": person.Gender,
+		"Birth":  person.Birth,
+	})
 
 }
 
 func UpdatePerson(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPatch {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		if _, err := w.Write([]byte("Method not allowed. Only PATCH requests.")); err != nil {
-			log.Printf("error while writting response body %s", err)
-		}
+		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not allowed. Only PATCH requests.")
 		return
 	}
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println("error reading body", err)
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	var person models.Person
 
+	personID := r.URL.Query()["id"]
+
 	if err := json.Unmarshal(body, &person); err != nil {
-		log.Println("error unmarshalling body")
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	if err = postgres.DB.DB.Where("id = ?", person.ID).Updates(&person).Error; err != nil {
-		log.Println("error while updating row in DB", err)
+	res := postgres.DB.DB.Where("id = ?", personID).Updates(&person)
+	if res.Error != nil {
+		newErrorResponse(w, http.StatusInternalServerError, res.Error.Error())
+		return
+	}
+	if err = postgres.DB.DB.Where("id = ?", person).First(&person).Error; err != nil {
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	//TODO return status code
+	newJsonResponse(w, http.StatusOK, map[string]string{
+		"ID":     strconv.Itoa(int(person.ID)),
+		"Name":   person.Name,
+		"Gender": person.Gender,
+		"Birth":  person.Birth,
+	})
 }
 
 func DeletePerson(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		if _, err := w.Write([]byte("Method not allowed. Only DELETE requests.")); err != nil {
-			log.Printf("error while writting response body %s", err)
-		}
+		newErrorResponse(w, http.StatusMethodNotAllowed, "method not allowed")
 		return
 	}
 
 	var person models.Person
-	personID := r.URL.Query()["id"]
 
-	// TODO check if such user does not exists
+	personID := r.URL.Query()["id"]
 
 	s := postgres.DB.DB.Delete(&person, personID)
 	if s.Error != nil {
-		log.Println("error while deleting row from DB", s.Error)
+		newErrorResponse(w, http.StatusInternalServerError, s.Error.Error())
 		return
 	}
-	w.Write([]byte("OK. User deleted"))
+	newJsonResponse(w, http.StatusOK, map[string]string{"message": "User deleted successfully"})
 }
 
 func GetPerson(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		if _, err := w.Write([]byte("Method not allowed. Only DELETE requests.")); err != nil {
-			log.Printf("error while writting response body %s", err)
-		}
+		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not allowed. Only GET requests.")
 		return
 	}
 
 	personID := r.URL.Query()["id"]
 
 	var person models.Person
+
 	err := postgres.DB.DB.Where("id = ?", personID).First(&person).Error
 	if err != nil {
-		log.Println("Some error while getting user from DB", err)
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	w.Write([]byte("OK."))
-	b, err := json.Marshal(person)
-	if err != nil {
-		log.Println("some error while unmarshalling", err)
-	}
-	w.Write(b)
+	newJsonResponse(w, http.StatusOK, map[string]string{
+		"ID":     strconv.Itoa(int(person.ID)),
+		"Name":   person.Name,
+		"Gender": person.Gender,
+		"Birth":  person.Birth,
+	})
+
 }
