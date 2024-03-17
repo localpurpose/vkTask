@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/localpurpose/vk-filmoteka/handlers"
+	"github.com/localpurpose/vk-filmoteka/middleware"
 	"github.com/localpurpose/vk-filmoteka/pkg/database/postgres"
 	"log"
 	"net/http"
@@ -9,28 +10,28 @@ import (
 
 func main() {
 
-	// TODO Methods Patch, Get, Delete should have an ID in URL-PATH - DONE
+	// TODO Methods Patch, Get, Delete should have an ID in URL-PATH
 	// TODO On-change data should return a new model as a JSON object
 	// TODO Handlers refactoring
 	// TODO Project refactoring after implementing all API methods
 	// TODO Add salt when hashing user password
 	// TODO implement method to get person by NAME
+	// TODO implement method to get movie by NAME
 
 	mux := http.NewServeMux()
 
 	postgres.ConnectDB()
 	// Person
-	mux.HandleFunc("/person/create", handlers.CreatePerson)
-
-	mux.HandleFunc("/person/update", handlers.UpdatePerson)
-	mux.HandleFunc("/person/delete", handlers.DeletePerson)
-	mux.HandleFunc("/person", handlers.GetPerson)
+	mux.HandleFunc("/person/create", middleware.Protected(handlers.CreatePerson))
+	mux.HandleFunc("/person/update", middleware.Protected(handlers.UpdatePerson))
+	mux.HandleFunc("/person/delete", middleware.Protected(handlers.DeletePerson))
+	mux.HandleFunc("/person", middleware.Protected(handlers.DeletePerson))
 
 	// Movie
-	mux.HandleFunc("/movie/create", handlers.CreateMovie)
-	mux.HandleFunc("/movie/update", handlers.UpdateMovie)
-	mux.HandleFunc("/movie/delete", handlers.DeleteMovie)
-	mux.HandleFunc("/movie", handlers.GetMovie)
+	mux.HandleFunc("/movie/create", middleware.Protected(handlers.CreateMovie))
+	mux.HandleFunc("/movie/update", middleware.Protected(handlers.CreateMovie))
+	mux.HandleFunc("/movie/delete", middleware.Protected(handlers.DeleteMovie))
+	mux.HandleFunc("/movie", middleware.Protected(handlers.GetMovie))
 
 	// Actors - Relations between movies and persons
 	// TODO Implementation actors API (See Task Description)
