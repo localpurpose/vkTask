@@ -21,26 +21,27 @@ func main() {
 	mux := http.NewServeMux()
 
 	postgres.ConnectDB()
+
 	// Person
-	mux.HandleFunc("/person/create", middleware.Protected(handlers.CreatePerson))
-	mux.HandleFunc("/person/update", middleware.Protected(handlers.UpdatePerson))
-	mux.HandleFunc("/person/delete", middleware.Protected(handlers.DeletePerson))
-	mux.HandleFunc("/person", middleware.Protected(handlers.DeletePerson))
+	mux.HandleFunc("/person/create", middleware.LogHandler(middleware.Protected(handlers.CreatePerson)))
+	mux.HandleFunc("/person/update", middleware.LogHandler(middleware.Protected(handlers.UpdatePerson)))
+	mux.HandleFunc("/person/delete", middleware.LogHandler(middleware.Protected(handlers.DeletePerson)))
+	mux.HandleFunc("/person", middleware.LogHandler(middleware.Protected(handlers.GetPerson)))
 
 	// Movie
-	mux.HandleFunc("/movie/create", middleware.Protected(handlers.CreateMovie))
-	mux.HandleFunc("/movie/update", middleware.Protected(handlers.CreateMovie))
-	mux.HandleFunc("/movie/delete", middleware.Protected(handlers.DeleteMovie))
-	mux.HandleFunc("/movie", middleware.Protected(handlers.GetMovie))
+	mux.HandleFunc("/movie/create", middleware.LogHandler(middleware.Protected(handlers.CreateMovie)))
+	mux.HandleFunc("/movie/update", middleware.LogHandler(middleware.Protected(handlers.CreateMovie)))
+	mux.HandleFunc("/movie/delete", middleware.LogHandler(middleware.Protected(handlers.DeleteMovie)))
+	mux.HandleFunc("/movie", middleware.LogHandler(middleware.Protected(handlers.GetMovieByName)))
 
 	// Actors - Relations between movies and persons
 	// TODO Implementation actors API (See Task Description)
-	mux.HandleFunc("/", handleHome)
+	mux.HandleFunc("/", middleware.LogHandler(handleHome))
 
 	// Users (Administrator and default user)
 	// Roles deference implements with JWT claim Role: user, admin
-	mux.HandleFunc("/user/sign-up", handlers.UserSignUp)
-	mux.HandleFunc("/user/sign-in", handlers.UserSignIn)
+	mux.HandleFunc("/user/sign-up", middleware.LogHandler(handlers.UserSignUp))
+	mux.HandleFunc("/user/sign-in", middleware.LogHandler(handlers.UserSignIn))
 
 	log.Println("Server started!")
 	log.Fatal(http.ListenAndServe(":3000", mux))
