@@ -10,7 +10,6 @@ import (
 
 func main() {
 
-	// TODO implement method to get person by NAME;
 	// TODO Person takes part movie inside his struct and DB model *gorm;
 	// TODO Validate movie rating (1 - 10);
 	// TODO Project refactoring after implementing all API methods;
@@ -27,7 +26,7 @@ func main() {
 	mux.HandleFunc("/person/create", middleware.LogHandler(middleware.Protected(handlers.CreatePerson)))
 	mux.HandleFunc("/person/update", middleware.LogHandler(middleware.Protected(handlers.UpdatePerson)))
 	mux.HandleFunc("/person/delete", middleware.LogHandler(middleware.Protected(handlers.DeletePerson)))
-	mux.HandleFunc("/person", middleware.LogHandler(middleware.Protected(handlers.GetPerson)))
+	mux.HandleFunc("/person", middleware.LogHandler(middleware.Protected(handlers.GetPersonByName)))
 
 	// Movie
 	mux.HandleFunc("/movie/create", middleware.LogHandler(middleware.Protected(handlers.CreateMovie)))
