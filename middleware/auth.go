@@ -24,7 +24,6 @@ func Protected(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Println("middleware here")
 		header := r.Header[authorizationHeader]
-		log.Println(header, "<- header ")
 
 		if header[0] == "" {
 			log.Println("empty header")
@@ -36,8 +35,6 @@ func Protected(next http.HandlerFunc) http.HandlerFunc {
 			log.Println("error header parts")
 			return
 		}
-
-		log.Println("alright!!")
 
 		userID, role, err := parseToken(headerParts[1])
 		if err != nil {
