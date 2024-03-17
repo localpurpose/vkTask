@@ -10,6 +10,14 @@ import (
 	"strings"
 )
 
+// CreateMovie godoc
+//
+//	@Summary	Creates movie from request body
+//	@Tags		movies
+//	@Accept		json
+//	@Produce	json
+//	@Success	200
+//	@Router		/movie/create [post]
 func CreateMovie(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not allowed. Only POST requests.")
@@ -45,6 +53,15 @@ func CreateMovie(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// UpdateMovie godoc
+//
+//	@Summary	Updates movie from request body by url path id
+//	@Tags		movies
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path	integer	true	"User id"
+//	@Success	200
+//	@Router		/movie/update/{id} [patch]
 func UpdateMovie(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPatch {
 		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not Allowed. Only PATCH requests.")
@@ -79,6 +96,14 @@ func UpdateMovie(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// DeleteMovie godoc
+//
+//	@Summary	Updates movie from request body by url path id
+//	@Tags		movies
+//	@Accept		json
+//	@Produce	json
+//	@Success	200
+//	@Router		/movie/delete{id} [delete]
 func DeleteMovie(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {
 		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not allowed. Only DELETE requests.")
@@ -100,6 +125,14 @@ func DeleteMovie(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// GetMovieByName godoc
+//
+//	@Summary	Updates movie from request body by Name
+//	@Tags		movies
+//	@Accept		json
+//	@Produce	json
+//	@Success	200
+//	@Router		/movie [get]
 func GetMovieByName(w http.ResponseWriter, r *http.Request) {
 
 	// TODO Implement sorting by: (ORDER BY): name,rating,date (default:rating)

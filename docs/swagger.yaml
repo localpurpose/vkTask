@@ -1,0 +1,62 @@
+host: localhost:3000
+info:
+  contact: {}
+  description: VK TEST TASK - FILMOTEKA BACKEND REST API
+  title: Filmoteka API
+  version: "1.0"
+paths:
+  /movie:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Updates movie from request body by Name
+      tags:
+      - movies
+  /movie/create:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Creates movie from request body
+      tags:
+      - movies
+  /movie/delete{id}:
+    delete:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Updates movie from request body by url path id
+      tags:
+      - movies
+  /movie/update/{id}:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Updates movie from request body by url path id
+      tags:
+      - movies
+swagger: "2.0"

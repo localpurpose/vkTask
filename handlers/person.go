@@ -5,8 +5,9 @@ import (
 	"github.com/localpurpose/vk-filmoteka/models"
 	"github.com/localpurpose/vk-filmoteka/pkg/database/postgres"
 	"io"
+	"log"
 	"net/http"
-	"strconv"
+	"strings"
 )
 
 func CreatePerson(w http.ResponseWriter, r *http.Request) {
@@ -101,27 +102,123 @@ func DeletePerson(w http.ResponseWriter, r *http.Request) {
 	newJsonResponse(w, http.StatusOK, map[string]interface{}{"message": "User deleted successfully"})
 }
 
-func GetPerson(w http.ResponseWriter, r *http.Request) {
+func GetPersonByName(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not allowed. Only GET requests.")
 		return
 	}
 
-	personID := r.URL.Query()["id"]
+	personName := r.URL.Query()["name"]
 
-	var person models.Person
+	var person []models.Person
 
-	err := postgres.DB.DB.Where("id = ?", personID).First(&person).Error
+	err := postgres.DB.DB.Select("name").Find(&person).Error
 	if err != nil {
 		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	newJsonResponse(w, http.StatusOK, map[string]interface{}{
-		"ID":     strconv.Itoa(int(person.ID)),
-		"Name":   person.Name,
-		"Gender": person.Gender,
-		"Birth":  person.Birth,
-	})
+	for i := 0; i < len(person); i++ {
+		if strings.Contains(person[i].Name, personName[0]) {
+			log.Println("MATCH:", person[i].Name)
+		}
+	}
+
+	//newJsonResponse(w, http.StatusOK, map[string]interface{}{
+	//	"ID":     person.ID,
+	//	"Name":   person.Name,
+	//	"Gender": person.Gender,
+	//	"Birth":  person.Birth,
+	//})
+}
+
+func GetAllPersons(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not allowed. Only GET requests.")
+		return
+	}
+
+	type PersonsDB struct {
+		ID     uint           `json:"ID"`
+		Name   string         `json:"name"`
+		Gender string         `json:"gender"`
+		Birth  string         `json:"birth"`
+		Movies []models.Movie `json:"movies"`
+	}
+
+	var persons []models.Person
+	err := postgres.DB.DB.Find(&persons).Error
+	if err != nil {
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	var actorsRels []models.Actor
+	err = postgres.DB.DB.Find(&actorsRels).Error
+	if err != nil {
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
+	}
+
+	var jsonPersons []PersonsDB
+
+	for i := 0; i < len(actorsRels); i++ {
+		for j := 0; j < len(persons); j++ {
+			if actorsRels[i].PersonID == persons[j].ID {
+
+				var cur_m []models.Movie
+				log.Println(cur_m, persons[j].ID)
+				err = postgres.DB.DB.Where("id = ?", actorsRels[i].MovieId).Find(&cur_m).Error
+				if err != nil {
+					newErrorResponse(w, http.StatusInternalServerError, err.Error())
+				}
+
+				jsonPersons = append(jsonPersons, PersonsDB{
+					ID:     persons[j].ID,
+					Name:   persons[j].Name,
+					Gender: "",
+					Birth:  "",
+					Movies: cur_m,
+				})
+				break
+			}
+		}
+
+	}
+
+	for i := 0; i < len(jsonPersons); i++ {
+		log.Println(jsonPersons[i])
+	}
+	log.Println(jsonPersons)
+
+	w.Header().Set("Content-Type", "application/json")
+	if _, err := w.Write([]byte("")); err != nil {
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
+		return
+	}
 
 }
+
+//func GetPerson(w http.ResponseWriter, r *http.Request) {
+//	if r.Method != http.MethodGet {
+//		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not allowed. Only GET requests.")
+//		return
+//	}
+//
+//	personID := r.URL.Query()["id"]
+//
+//	var person models.Person
+//
+//	err := postgres.DB.DB.Where("id = ?", personID).First(&person).Error
+//	if err != nil {
+//		newErrorResponse(w, http.StatusInternalServerError, err.Error())
+//		return
+//	}
+//
+//	newJsonResponse(w, http.StatusOK, map[string]interface{}{
+//		"ID":     strconv.Itoa(int(person.ID)),
+//		"Name":   person.Name,
+//		"Gender": person.Gender,
+//		"Birth":  person.Birth,
+//	})
+//
+//}
