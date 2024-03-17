@@ -13,7 +13,7 @@
 1. Склонируйте репозиторий на вашу локальную машину <br>
 ``` git clone https://github.com/localpurpose/vkTask.git ```
 2. Создайте файл .env и укажите параметры: <br>
-```
+```python
 DB_USER=userName
 DB_PASSWORD=strongPassword
 DB_NAME=databaseName
