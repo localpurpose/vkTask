@@ -13,7 +13,6 @@ import (
 // CreateMovie godoc
 //
 //	@Security	ApiKeyAuth
-//
 //	@Summary	Creates movie from request body
 //	@Tags		movies
 //	@Accept		json
