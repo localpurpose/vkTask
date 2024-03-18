@@ -144,6 +144,15 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "Update movie BODY",
+                        "name": "movie",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Movie"
+                        }
                     }
                 ],
                 "responses": {
@@ -173,9 +182,20 @@ const docTemplate = `{
                     "persons"
                 ],
                 "summary": "Gets person from request URL name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Get person by name",
+                        "name": "name",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Person"
+                        }
                     }
                 }
             }
@@ -197,9 +217,23 @@ const docTemplate = `{
                     "persons"
                 ],
                 "summary": "Creates person from request body",
+                "parameters": [
+                    {
+                        "description": "Create Person",
+                        "name": "person",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Person"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Person"
+                        }
                     }
                 }
             }
@@ -221,6 +255,15 @@ const docTemplate = `{
                     "persons"
                 ],
                 "summary": "Deletes person from request URL id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Delete Person",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -245,9 +288,30 @@ const docTemplate = `{
                     "persons"
                 ],
                 "summary": "Updates person from request URL id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Update Person",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Person BODY",
+                        "name": "person",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Person"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Person"
+                        }
                     }
                 }
             }
@@ -276,13 +340,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/sign-in/": {
+        "/user/sign-in": {
             "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -293,6 +352,17 @@ const docTemplate = `{
                     "users"
                 ],
                 "summary": "Signing In user endpoint",
+                "parameters": [
+                    {
+                        "description": "Login to account",
+                        "name": "loginInput",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.LoginInput"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -300,13 +370,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/sign-up/": {
+        "/user/sign-up": {
             "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -317,15 +382,40 @@ const docTemplate = `{
                     "users"
                 ],
                 "summary": "Create user endpoint",
+                "parameters": [
+                    {
+                        "description": "Create User Account",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.LoginInput"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
                     }
                 }
             }
         }
     },
     "definitions": {
+        "handlers.LoginInput": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Movie": {
             "type": "object",
             "properties": {
@@ -343,6 +433,40 @@ const docTemplate = `{
                 },
                 "rating": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.Person": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer"
+                },
+                "birth": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         }

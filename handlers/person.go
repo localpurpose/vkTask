@@ -12,13 +12,14 @@ import (
 
 // CreatePerson godoc
 //
-// @Security ApiKeyAuth
+//	@Security	ApiKeyAuth
 //
 //	@Summary	Creates person from request body
 //	@Tags		persons
 //	@Accept		json
 //	@Produce	json
-//	@Success	200
+//	@Param		person	body		models.Person	true	"Create Person"
+//	@Success	200		{object}	models.Person
 //	@Router		/person/create [post]
 func CreatePerson(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -55,13 +56,15 @@ func CreatePerson(w http.ResponseWriter, r *http.Request) {
 
 // UpdatePerson godoc
 //
-// @Security ApiKeyAuth
+//	@Security	ApiKeyAuth
 //
 //	@Summary	Updates person from request URL id
 //	@Tags		persons
 //	@Accept		json
 //	@Produce	json
-//	@Success	200
+//	@Param		id		path		int				true	"Update Person"
+//	@Param		person	body		models.Person	true	"Update Person BODY"
+//	@Success	200		{object}	models.Person
 //	@Router		/person/update [patch]
 func UpdatePerson(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPatch {
@@ -106,12 +109,13 @@ func UpdatePerson(w http.ResponseWriter, r *http.Request) {
 
 // DeletePerson godoc
 //
-// @Security ApiKeyAuth
+//	@Security	ApiKeyAuth
 //
 //	@Summary	Deletes person from request URL id
 //	@Tags		persons
 //	@Accept		json
 //	@Produce	json
+//	@Param		id	path	int	true	"Delete Person"
 //	@Success	200
 //	@Router		/person/delete [delete]
 func DeletePerson(w http.ResponseWriter, r *http.Request) {
@@ -134,13 +138,14 @@ func DeletePerson(w http.ResponseWriter, r *http.Request) {
 
 // GetPersonByName godoc
 //
-// @Security ApiKeyAuth
+//	@Security	ApiKeyAuth
 //
 //	@Summary	Gets person from request URL name
 //	@Tags		persons
 //	@Accept		json
 //	@Produce	json
-//	@Success	200
+//	@Param		name	query		string	false	"Get person by name"
+//	@Success	200		{object}	models.Person
 //	@Router		/person [get]
 func GetPersonByName(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
@@ -174,7 +179,7 @@ func GetPersonByName(w http.ResponseWriter, r *http.Request) {
 
 // GetAllPersons godoc
 //
-// @Security ApiKeyAuth
+//	@Security	ApiKeyAuth
 //
 //	@Summary	Gets all persons
 //	@Tags		persons

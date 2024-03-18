@@ -15,15 +15,20 @@ import (
 	"time"
 )
 
+type LoginInput struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
 // UserSignUp godoc
 //
-// @Security ApiKeyAuth
-// @Summary	Create user endpoint
-// @Tags		users
-// @Accept		json
-// @Produce	json
-// @Success	200
-// @Router		/user/sign-up/ [post]
+//	@Summary	Create user endpoint
+//	@Tags		users
+//	@Accept		json
+//	@Produce	json
+//	@Param		user	body		LoginInput	true	"Create User Account"
+//	@Success	200		{object}	models.User
+//	@Router		/user/sign-up [post]
 func UserSignUp(w http.ResponseWriter, r *http.Request) {
 
 	var user models.User
@@ -52,28 +57,21 @@ func UserSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newJsonResponse(w, http.StatusOK, map[string]interface{}{
-		"ID":       user.ID,
 		"Username": user.Username,
 		"Password": user.Password,
-		"Role":     user.Role,
 	})
 }
 
 // UserSignIn godoc
 //
-// @Security ApiKeyAuth
-// @Summary	Signing In user endpoint
-// @Tags		users
-// @Accept		json
-// @Produce	json
-// @Success	200
-// @Router		/user/sign-in/ [post]
+//	@Summary	Signing In user endpoint
+//	@Tags		users
+//	@Accept		json
+//	@Produce	json
+//	@Param		loginInput	body	LoginInput	true	"Login to account"
+//	@Success	200
+//	@Router		/user/sign-in [post]
 func UserSignIn(w http.ResponseWriter, r *http.Request) {
-
-	type LoginInput struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
 
 	b, err := io.ReadAll(r.Body)
 	if err != nil {

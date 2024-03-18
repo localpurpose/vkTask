@@ -61,8 +61,9 @@ func CreateMovie(w http.ResponseWriter, r *http.Request) {
 //	@Tags		movies
 //	@Accept		json
 //	@Produce	json
-//	@Param		id	path		int	true	"Update Movie"
-//	@Success	200	{object}	models.Movie
+//	@Param		id		path		int				true	"Update Movie"
+//	@Param		movie	body		models.Movie	true	"Update movie BODY"
+//	@Success	200		{object}	models.Movie
 //	@Router		/movie/update/{id} [patch]
 func UpdateMovie(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPatch {

@@ -1,4 +1,11 @@
 definitions:
+  handlers.LoginInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   models.Movie:
     properties:
       ID:
@@ -11,6 +18,28 @@ definitions:
         type: string
       rating:
         type: integer
+    type: object
+  models.Person:
+    properties:
+      ID:
+        type: integer
+      birth:
+        type: string
+      gender:
+        type: string
+      name:
+        type: string
+    type: object
+  models.User:
+    properties:
+      ID:
+        type: integer
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
     type: object
 host: localhost:3000
 info:
@@ -93,6 +122,12 @@ paths:
         name: id
         required: true
         type: integer
+      - description: Update movie BODY
+        in: body
+        name: movie
+        required: true
+        schema:
+          $ref: '#/definitions/models.Movie'
       produces:
       - application/json
       responses:
@@ -108,11 +143,18 @@ paths:
     get:
       consumes:
       - application/json
+      parameters:
+      - description: Get person by name
+        in: query
+        name: name
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/models.Person'
       security:
       - ApiKeyAuth: []
       summary: Gets person from request URL name
@@ -122,11 +164,20 @@ paths:
     post:
       consumes:
       - application/json
+      parameters:
+      - description: Create Person
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/models.Person'
       produces:
       - application/json
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/models.Person'
       security:
       - ApiKeyAuth: []
       summary: Creates person from request body
@@ -136,6 +187,12 @@ paths:
     delete:
       consumes:
       - application/json
+      parameters:
+      - description: Delete Person
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -150,11 +207,25 @@ paths:
     patch:
       consumes:
       - application/json
+      parameters:
+      - description: Update Person
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Person BODY
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/models.Person'
       produces:
       - application/json
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/models.Person'
       security:
       - ApiKeyAuth: []
       summary: Updates person from request URL id
@@ -174,31 +245,43 @@ paths:
       summary: Gets all persons
       tags:
       - persons
-  /user/sign-in/:
+  /user/sign-in:
     post:
       consumes:
       - application/json
+      parameters:
+      - description: Login to account
+        in: body
+        name: loginInput
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.LoginInput'
       produces:
       - application/json
       responses:
         "200":
           description: OK
-      security:
-      - ApiKeyAuth: []
       summary: Signing In user endpoint
       tags:
       - users
-  /user/sign-up/:
+  /user/sign-up:
     post:
       consumes:
       - application/json
+      parameters:
+      - description: Create User Account
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.LoginInput'
       produces:
       - application/json
       responses:
         "200":
           description: OK
-      security:
-      - ApiKeyAuth: []
+          schema:
+            $ref: '#/definitions/models.User'
       summary: Create user endpoint
       tags:
       - users

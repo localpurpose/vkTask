@@ -1,5 +1,6 @@
 package models
 
+// Person represent a person Model
 type Person struct {
 	ID     uint   `json:"ID" gorm:"primaryKey"`
 	Name   string `json:"name" gorm:"not null"`
