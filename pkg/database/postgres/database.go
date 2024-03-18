@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"fmt"
-	"github.com/localpurpose/vk-filmoteka/models"
+	models2 "github.com/localpurpose/vk-filmoteka/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -32,7 +32,7 @@ func ConnectDB() {
 	db.Logger = logger.Default.LogMode(logger.Info)
 
 	log.Println("Runing migrations")
-	err = db.AutoMigrate(&models.Actor{}, &models.Person{}, &models.Movie{}, &models.User{})
+	err = db.AutoMigrate(&models2.Actor{}, &models2.Person{}, &models2.Movie{}, &models2.User{})
 	if err != nil {
 		log.Println(err)
 	}

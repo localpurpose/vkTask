@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/localpurpose/vk-filmoteka/models"
+	models2 "github.com/localpurpose/vk-filmoteka/internal/models"
 	"github.com/localpurpose/vk-filmoteka/pkg/database/postgres"
 	"io"
 	"log"
@@ -33,7 +33,7 @@ func CreatePerson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var person models.Person
+	var person models2.Person
 
 	if err = json.Unmarshal(body, &person); err != nil {
 		newErrorResponse(w, http.StatusInternalServerError, err.Error())
@@ -78,7 +78,7 @@ func UpdatePerson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var person models.Person
+	var person models2.Person
 
 	personID := r.URL.Query()["id"]
 
@@ -92,7 +92,7 @@ func UpdatePerson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var rPerson models.Person
+	var rPerson models2.Person
 
 	if err = postgres.DB.DB.Where("id = ?", personID).First(&rPerson).Error; err != nil {
 		newErrorResponse(w, http.StatusInternalServerError, err.Error())
@@ -124,7 +124,7 @@ func DeletePerson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var person models.Person
+	var person models2.Person
 
 	personID := r.URL.Query()["id"]
 
@@ -155,7 +155,7 @@ func GetPersonByName(w http.ResponseWriter, r *http.Request) {
 
 	personName := r.URL.Query()["name"]
 
-	var person []models.Person
+	var person []models2.Person
 
 	err := postgres.DB.DB.Select("name").Find(&person).Error
 	if err != nil {
@@ -194,21 +194,21 @@ func GetAllPersons(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type PersonsDB struct {
-		ID     uint           `json:"ID"`
-		Name   string         `json:"name"`
-		Gender string         `json:"gender"`
-		Birth  string         `json:"birth"`
-		Movies []models.Movie `json:"movies"`
+		ID     uint            `json:"ID"`
+		Name   string          `json:"name"`
+		Gender string          `json:"gender"`
+		Birth  string          `json:"birth"`
+		Movies []models2.Movie `json:"movies"`
 	}
 
-	var persons []models.Person
+	var persons []models2.Person
 	err := postgres.DB.DB.Find(&persons).Error
 	if err != nil {
 		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	var actorsRels []models.Actor
+	var actorsRels []models2.Actor
 	err = postgres.DB.DB.Find(&actorsRels).Error
 	if err != nil {
 		newErrorResponse(w, http.StatusInternalServerError, err.Error())
@@ -220,7 +220,7 @@ func GetAllPersons(w http.ResponseWriter, r *http.Request) {
 		for j := 0; j < len(persons); j++ {
 			if actorsRels[i].PersonID == persons[j].ID {
 
-				var cur_m []models.Movie
+				var cur_m []models2.Movie
 				log.Println(cur_m, persons[j].ID)
 				err = postgres.DB.DB.Where("id = ?", actorsRels[i].MovieId).Find(&cur_m).Error
 				if err != nil {

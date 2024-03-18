@@ -2,9 +2,9 @@ package main
 
 import (
 	_ "github.com/localpurpose/vk-filmoteka/docs"
-	"github.com/localpurpose/vk-filmoteka/handlers"
-	"github.com/localpurpose/vk-filmoteka/middleware"
+	handlers2 "github.com/localpurpose/vk-filmoteka/internal/handlers"
 	"github.com/localpurpose/vk-filmoteka/pkg/database/postgres"
+	middleware2 "github.com/localpurpose/vk-filmoteka/pkg/middleware"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"log"
 	"net/http"
@@ -15,7 +15,7 @@ import (
 // @description				VK TEST TASK - FILMOTEKA BACKEND REST API
 // @host						localhost:3000
 //
-// @securityDefinitions.basic	ApiKeyAuth
+// @securityDefinitions.apikey	ApiKeyAuth
 // @in							header
 // @name						Authorization
 func main() {
@@ -33,24 +33,24 @@ func main() {
 	postgres.ConnectDB()
 
 	// Person
-	mux.HandleFunc("/person/create", middleware.LogHandler(middleware.Protected(handlers.CreatePerson)))
-	mux.HandleFunc("/person/update", middleware.LogHandler(middleware.Protected(handlers.UpdatePerson)))
-	mux.HandleFunc("/person/delete", middleware.LogHandler(middleware.Protected(handlers.DeletePerson)))
-	mux.HandleFunc("/person", middleware.LogHandler(middleware.Protected(handlers.GetPersonByName)))
-	mux.HandleFunc("/persons", middleware.LogHandler(middleware.Protected(handlers.GetAllPersons)))
+	mux.HandleFunc("/person/create", middleware2.LogHandler(middleware2.Protected(handlers2.CreatePerson)))
+	mux.HandleFunc("/person/update", middleware2.LogHandler(middleware2.Protected(handlers2.UpdatePerson)))
+	mux.HandleFunc("/person/delete", middleware2.LogHandler(middleware2.Protected(handlers2.DeletePerson)))
+	mux.HandleFunc("/person", middleware2.LogHandler(middleware2.Protected(handlers2.GetPersonByName)))
+	mux.HandleFunc("/persons", middleware2.LogHandler(middleware2.Protected(handlers2.GetAllPersons)))
 	// Movie
-	mux.HandleFunc("/movie/create", middleware.LogHandler(middleware.Protected(handlers.CreateMovie)))
-	mux.HandleFunc("/movie/update", middleware.LogHandler(middleware.Protected(handlers.UpdateMovie)))
-	mux.HandleFunc("/movie/delete", middleware.LogHandler(middleware.Protected(handlers.DeleteMovie)))
-	mux.HandleFunc("/movie", middleware.LogHandler(middleware.Protected(handlers.GetMovieByName)))
+	mux.HandleFunc("/movie/create", middleware2.LogHandler(middleware2.Protected(handlers2.CreateMovie)))
+	mux.HandleFunc("/movie/update", middleware2.LogHandler(middleware2.Protected(handlers2.UpdateMovie)))
+	mux.HandleFunc("/movie/delete", middleware2.LogHandler(middleware2.Protected(handlers2.DeleteMovie)))
+	mux.HandleFunc("/movie", middleware2.LogHandler(middleware2.Protected(handlers2.GetMovieByName)))
 
 	// Users (Administrator and default user)
 	// Roles deference implements with JWT claim Role: user, admin
 	// After creating user its default role is user, to change - USE DB (See Task Description...)
-	mux.HandleFunc("/user/sign-up", middleware.LogHandler(handlers.UserSignUp))
-	mux.HandleFunc("/user/sign-in", middleware.LogHandler(handlers.UserSignIn))
+	mux.HandleFunc("/user/sign-up", middleware2.LogHandler(handlers2.UserSignUp))
+	mux.HandleFunc("/user/sign-in", middleware2.LogHandler(handlers2.UserSignIn))
 
-	mux.HandleFunc("/", middleware.LogHandler(handleHome))
+	mux.HandleFunc("/", middleware2.LogHandler(handleHome))
 
 	// Swagger 2.0 Specification
 	mux.HandleFunc("/doc/swagger.json", func(w http.ResponseWriter, r *http.Request) {

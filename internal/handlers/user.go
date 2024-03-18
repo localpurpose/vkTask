@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/localpurpose/vk-filmoteka/models"
+	"github.com/localpurpose/vk-filmoteka/internal/models"
 	"github.com/localpurpose/vk-filmoteka/pkg/database/postgres"
 	"github.com/localpurpose/vk-filmoteka/pkg/hash"
 	"gorm.io/gorm"

@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/localpurpose/vk-filmoteka/models"
+	"github.com/localpurpose/vk-filmoteka/internal/models"
 	"github.com/localpurpose/vk-filmoteka/pkg/database/postgres"
 	"io"
 	"log"
