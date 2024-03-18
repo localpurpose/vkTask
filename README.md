@@ -24,6 +24,7 @@
 |Logging Middleware|✅|-|
 |Docker File для сборки|✅|-|
 |docker-compsoe для запуска|✅|WEB+DB|
+|Unit Testing|❌|-|
 
 ## Quick Start
 1. Склонируйте репозиторий на вашу локальную машину <br>
