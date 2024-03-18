@@ -3,11 +3,6 @@
 
 ![1600_800_trans_65f6ccb65a1bd](https://github.com/localpurpose/vkTask/assets/139833240/c3942b83-a358-4711-8668-34085b44a954)
 
-> ## Условия
->> Язык реализации: Go <br>
->> Хранение данных: PostgreSQL <br>
->> Спецификация: Swagger 2.0 <br> 
-
 ## Функциональность
 |FUNC| DONE| DESC|
 |-|--------|---|
