@@ -15,7 +15,7 @@ import (
 // @description				VK TEST TASK - FILMOTEKA BACKEND REST API
 // @host						localhost:3000
 //
-// @securityDefinitions.apikey	ApiKeyAuth
+// @securityDefinitions.basic	ApiKeyAuth
 // @in							header
 // @name						Authorization
 func main() {

@@ -30,29 +30,33 @@ func UserSignUp(w http.ResponseWriter, r *http.Request) {
 
 	b, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println("some error while reading body", err)
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	err = json.Unmarshal(b, &user)
 	if err != nil {
-		log.Println("some error while unmarshalling json", err)
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	user.Password, err = hash.HashPassword(user.Password)
 	if err != nil {
-		log.Println("error hashing user password", err)
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	if err = postgres.DB.DB.Create(&user).Error; err != nil {
-		log.Println("some error while creating user profile")
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	w.Write([]byte("user created\n"))
-	w.Write(b)
+	newJsonResponse(w, http.StatusOK, map[string]interface{}{
+		"ID":       user.ID,
+		"Username": user.Username,
+		"Password": user.Password,
+		"Role":     user.Role,
+	})
 }
 
 // UserSignIn godoc
@@ -73,7 +77,7 @@ func UserSignIn(w http.ResponseWriter, r *http.Request) {
 
 	b, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println("error while reading body", err)
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -81,21 +85,21 @@ func UserSignIn(w http.ResponseWriter, r *http.Request) {
 
 	err = json.Unmarshal(b, &input)
 	if err != nil {
-		log.Println("some error while unmarshalling body", err)
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	userModel, err := getUserByUsername(input.Username)
 	if err != nil {
-		log.Println("some error while getting user by username", err)
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	} else if userModel == nil {
-		log.Println("userModel is nil", err)
+		newErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	if !hash.CheckPwdHash(input.Password, userModel.Password) {
-		w.Write([]byte("Invalid username or password"))
+		newErrorResponse(w, http.StatusBadRequest, "Invalid username or password")
 		return
 	}
 
@@ -113,10 +117,10 @@ func UserSignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte("Successful signing-in.\n"))
-	w.Write([]byte("" +
-		"{\njwt:" + t + "\n}",
-	))
+	newJsonResponse(w, http.StatusOK, map[string]interface{}{
+		"message": "Successfully authorized!",
+		"token":   t,
+	})
 }
 
 func getUserByUsername(u string) (*models.User, error) {

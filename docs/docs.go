@@ -31,10 +31,21 @@ const docTemplate = `{
                 "tags": [
                     "movies"
                 ],
-                "summary": "Updates movie from request body by Name",
+                "summary": "Gets movie from request body by Name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Get movie by name",
+                        "name": "name",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Movie"
+                        }
                     }
                 }
             }
@@ -56,14 +67,28 @@ const docTemplate = `{
                     "movies"
                 ],
                 "summary": "Creates movie from request body",
+                "parameters": [
+                    {
+                        "description": "Create Movie",
+                        "name": "movie",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Movie"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Movie"
+                        }
                     }
                 }
             }
         },
-        "/movie/delete/": {
+        "/movie/delete/{id}": {
             "delete": {
                 "security": [
                     {
@@ -80,6 +105,15 @@ const docTemplate = `{
                     "movies"
                 ],
                 "summary": "Updates movie from request body by url path id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Delete Movie",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -87,7 +121,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/movie/update/": {
+        "/movie/update/{id}": {
             "patch": {
                 "security": [
                     {
@@ -103,9 +137,21 @@ const docTemplate = `{
                 "tags": [
                     "movies"
                 ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Update Movie",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Movie"
+                        }
                     }
                 }
             }
@@ -279,11 +325,31 @@ const docTemplate = `{
             }
         }
     },
+    "definitions": {
+        "models.Movie": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
     "securityDefinitions": {
         "ApiKeyAuth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
+            "type": "basic"
         }
     }
 }`
