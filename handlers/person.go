@@ -10,6 +10,16 @@ import (
 	"strings"
 )
 
+// CreatePerson godoc
+//
+// @Security ApiKeyAuth
+//
+//	@Summary	Creates person from request body
+//	@Tags		persons
+//	@Accept		json
+//	@Produce	json
+//	@Success	200
+//	@Router		/person/create [post]
 func CreatePerson(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not allowed. Only POST requests.")
@@ -43,6 +53,16 @@ func CreatePerson(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// UpdatePerson godoc
+//
+// @Security ApiKeyAuth
+//
+//	@Summary	Updates person from request URL id
+//	@Tags		persons
+//	@Accept		json
+//	@Produce	json
+//	@Success	200
+//	@Router		/person/update [patch]
 func UpdatePerson(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPatch {
 		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not allowed. Only PATCH requests.")
@@ -84,6 +104,16 @@ func UpdatePerson(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// DeletePerson godoc
+//
+// @Security ApiKeyAuth
+//
+//	@Summary	Deletes person from request URL id
+//	@Tags		persons
+//	@Accept		json
+//	@Produce	json
+//	@Success	200
+//	@Router		/person/delete [delete]
 func DeletePerson(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {
 		newErrorResponse(w, http.StatusMethodNotAllowed, "method not allowed")
@@ -102,6 +132,16 @@ func DeletePerson(w http.ResponseWriter, r *http.Request) {
 	newJsonResponse(w, http.StatusOK, map[string]interface{}{"message": "User deleted successfully"})
 }
 
+// GetPersonByName godoc
+//
+// @Security ApiKeyAuth
+//
+//	@Summary	Gets person from request URL name
+//	@Tags		persons
+//	@Accept		json
+//	@Produce	json
+//	@Success	200
+//	@Router		/person [get]
 func GetPersonByName(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not allowed. Only GET requests.")
@@ -132,6 +172,16 @@ func GetPersonByName(w http.ResponseWriter, r *http.Request) {
 	//})
 }
 
+// GetAllPersons godoc
+//
+// @Security ApiKeyAuth
+//
+//	@Summary	Gets all persons
+//	@Tags		persons
+//	@Accept		json
+//	@Produce	json
+//	@Success	200
+//	@Router		/persons [get]
 func GetAllPersons(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not allowed. Only GET requests.")
@@ -197,28 +247,3 @@ func GetAllPersons(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
-
-//func GetPerson(w http.ResponseWriter, r *http.Request) {
-//	if r.Method != http.MethodGet {
-//		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not allowed. Only GET requests.")
-//		return
-//	}
-//
-//	personID := r.URL.Query()["id"]
-//
-//	var person models.Person
-//
-//	err := postgres.DB.DB.Where("id = ?", personID).First(&person).Error
-//	if err != nil {
-//		newErrorResponse(w, http.StatusInternalServerError, err.Error())
-//		return
-//	}
-//
-//	newJsonResponse(w, http.StatusOK, map[string]interface{}{
-//		"ID":     strconv.Itoa(int(person.ID)),
-//		"Name":   person.Name,
-//		"Gender": person.Gender,
-//		"Birth":  person.Birth,
-//	})
-//
-//}

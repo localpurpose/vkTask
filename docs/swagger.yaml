@@ -14,6 +14,8 @@ paths:
       responses:
         "200":
           description: OK
+      security:
+      - ApiKeyAuth: []
       summary: Updates movie from request body by Name
       tags:
       - movies
@@ -26,10 +28,12 @@ paths:
       responses:
         "200":
           description: OK
+      security:
+      - ApiKeyAuth: []
       summary: Creates movie from request body
       tags:
       - movies
-  /movie/delete{id}:
+  /movie/delete/:
     delete:
       consumes:
       - application/json
@@ -38,25 +42,125 @@ paths:
       responses:
         "200":
           description: OK
+      security:
+      - ApiKeyAuth: []
       summary: Updates movie from request body by url path id
       tags:
       - movies
-  /movie/update/{id}:
+  /movie/update/:
     patch:
       consumes:
       - application/json
-      parameters:
-      - description: User id
-        in: path
-        name: id
-        required: true
-        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: OK
-      summary: Updates movie from request body by url path id
+      security:
+      - ApiKeyAuth: []
       tags:
       - movies
+  /person:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      summary: Gets person from request URL name
+      tags:
+      - persons
+  /person/create:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      summary: Creates person from request body
+      tags:
+      - persons
+  /person/delete:
+    delete:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      summary: Deletes person from request URL id
+      tags:
+      - persons
+  /person/update:
+    patch:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      summary: Updates person from request URL id
+      tags:
+      - persons
+  /persons:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      summary: Gets all persons
+      tags:
+      - persons
+  /user/sign-in/:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      summary: Signing In user endpoint
+      tags:
+      - users
+  /user/sign-up/:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      summary: Create user endpoint
+      tags:
+      - users
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

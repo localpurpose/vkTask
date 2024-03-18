@@ -15,9 +15,16 @@ import (
 	"time"
 )
 
+// UserSignUp godoc
+//
+// @Security ApiKeyAuth
+// @Summary	Create user endpoint
+// @Tags		users
+// @Accept		json
+// @Produce	json
+// @Success	200
+// @Router		/user/sign-up/ [post]
 func UserSignUp(w http.ResponseWriter, r *http.Request) {
-
-	//TODO check if users username is already exists
 
 	var user models.User
 
@@ -48,6 +55,15 @@ func UserSignUp(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
+// UserSignIn godoc
+//
+// @Security ApiKeyAuth
+// @Summary	Signing In user endpoint
+// @Tags		users
+// @Accept		json
+// @Produce	json
+// @Success	200
+// @Router		/user/sign-in/ [post]
 func UserSignIn(w http.ResponseWriter, r *http.Request) {
 
 	type LoginInput struct {

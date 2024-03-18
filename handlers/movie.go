@@ -12,6 +12,8 @@ import (
 
 // CreateMovie godoc
 //
+// @Security ApiKeyAuth
+//
 //	@Summary	Creates movie from request body
 //	@Tags		movies
 //	@Accept		json
@@ -53,15 +55,13 @@ func CreateMovie(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// UpdateMovie godoc
-//
-//	@Summary	Updates movie from request body by url path id
-//	@Tags		movies
-//	@Accept		json
-//	@Produce	json
-//	@Param		id	path	integer	true	"User id"
-//	@Success	200
-//	@Router		/movie/update/{id} [patch]
+// UpdateMovie @Summary	Updates movie from request body by url path id
+// @Security ApiKeyAuth
+// @Tags		movies
+// @Accept		json
+// @Produce	json
+// @Success	200
+// @Router		/movie/update/ [patch]
 func UpdateMovie(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPatch {
 		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not Allowed. Only PATCH requests.")
@@ -98,12 +98,13 @@ func UpdateMovie(w http.ResponseWriter, r *http.Request) {
 
 // DeleteMovie godoc
 //
-//	@Summary	Updates movie from request body by url path id
-//	@Tags		movies
-//	@Accept		json
-//	@Produce	json
-//	@Success	200
-//	@Router		/movie/delete{id} [delete]
+// @Security ApiKeyAuth
+// @Summary	Updates movie from request body by url path id
+// @Tags		movies
+// @Accept		json
+// @Produce	json
+// @Success	200
+// @Router		/movie/delete/ [delete]
 func DeleteMovie(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {
 		newErrorResponse(w, http.StatusMethodNotAllowed, "Method not allowed. Only DELETE requests.")
@@ -127,12 +128,13 @@ func DeleteMovie(w http.ResponseWriter, r *http.Request) {
 
 // GetMovieByName godoc
 //
-//	@Summary	Updates movie from request body by Name
-//	@Tags		movies
-//	@Accept		json
-//	@Produce	json
-//	@Success	200
-//	@Router		/movie [get]
+// @Security ApiKeyAuth
+// @Summary	Updates movie from request body by Name
+// @Tags		movies
+// @Accept		json
+// @Produce	json
+// @Success	200
+// @Router		/movie [get]
 func GetMovieByName(w http.ResponseWriter, r *http.Request) {
 
 	// TODO Implement sorting by: (ORDER BY): name,rating,date (default:rating)
@@ -161,29 +163,3 @@ func GetMovieByName(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
-
-// --- 		Unnecessary method because of existing GetMovieByName below		 ---
-//func GetMovieByID(w http.ResponseWriter, r *http.Request) {
-//	if r.Method != http.MethodGet {
-//		w.WriteHeader(http.StatusMethodNotAllowed)
-//		if _, err := w.Write([]byte("Method not allowed. Only DELETE requests.")); err != nil {
-//			log.Printf("error while writting response body %s", err)
-//		}
-//		return
-//	}
-//
-//	movieID := r.URL.Query()["id"]
-//
-//	var movie models.Movie
-//	err := postgres.DB.DB.Where("id = ?", movieID).First(&movie).Error
-//	if err != nil {
-//		log.Println("Some error while getting movie from DB", err)
-//		return
-//	}
-//
-//	b, err := json.Marshal(movie)
-//	if err != nil {
-//		log.Println("some error while unmarshalling", err)
-//	}
-//	w.Write([]byte(b))
-//}

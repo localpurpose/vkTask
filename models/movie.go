@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// Movie represents the model
+// Movie represents the model of movie. Rels with actor and persons.
 type Movie struct {
 	// gorm.Model
 	gorm.Model

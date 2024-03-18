@@ -10,15 +10,18 @@ import (
 	"net/http"
 )
 
-// @title			Filmoteka API
-// @version		1.0
-// @description	VK TEST TASK - FILMOTEKA BACKEND REST API
-// @host			localhost:3000
+// @title						Filmoteka API
+// @version					1.0
+// @description				VK TEST TASK - FILMOTEKA BACKEND REST API
+// @host						localhost:3000
+//
+// @securityDefinitions.apikey	ApiKeyAuth
+// @in							header
+// @name						Authorization
 func main() {
 
 	// TODO Person takes part movie inside his struct and DB model *gorm;
 	// TODO Validate movie rating (1 - 10);
-	// TODO Project refactoring after implementing all API methods;
 
 	// TODO Roles permissions (See Task Description...)
 	// TODO Swagger 2.0 specification - /doc folder
